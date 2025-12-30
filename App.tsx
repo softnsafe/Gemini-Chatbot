@@ -100,14 +100,21 @@ const App: React.FC = () => {
         )
       );
 
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error sending message:", error);
+      let errorMessage = "I'm sorry, I encountered an error while processing your request. Please try again.";
+
+      // Improve error message for missing API key
+      if (error.message === "API_KEY is missing") {
+        errorMessage = "Configuration Error: API Key is missing. Please add VITE_API_KEY to your Vercel Environment Variables and redeploy.";
+      }
+
       setMessages((prev) => 
         prev.map((msg) => 
           msg.id === botMessageId 
             ? { 
                 ...msg, 
-                text: "I'm sorry, I encountered an error while processing your request. Please try again.", 
+                text: errorMessage, 
                 isStreaming: false,
                 isError: true
               } 
@@ -134,6 +141,15 @@ const App: React.FC = () => {
         </div>
         
         <div className="flex items-center gap-2">
+          <a
+            href="https://github.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors"
+            title="View on GitHub"
+          >
+            <Github size={20} />
+          </a>
           <button 
             onClick={handleClearChat}
             className="p-2 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"

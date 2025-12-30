@@ -1,0 +1,5 @@
+{
+  "name": "Gemini AI Chatbot",
+  "description": "A high-performance conversational AI chatbot built with Google's Gemini 3 Flash model, featuring real-time streaming responses and Markdown rendering.",
+  "requestFramePermissions": []
+}

@@ -4,11 +4,34 @@ import { GEMINI_MODEL } from "../constants";
 let chatSession: Chat | null = null;
 let genAI: GoogleGenAI | null = null;
 
+const getApiKey = (): string | undefined => {
+  // 1. Try Vite env (VITE_API_KEY) - Check this first!
+  // @ts-ignore
+  if (typeof import.meta !== 'undefined' && import.meta.env?.VITE_API_KEY) {
+    // @ts-ignore
+    return import.meta.env.VITE_API_KEY;
+  }
+
+  // 2. Try process.env (safely)
+  try {
+    // @ts-ignore
+    if (typeof process !== 'undefined' && process.env?.API_KEY) {
+      // @ts-ignore
+      return process.env.API_KEY;
+    }
+  } catch (e) {
+    // Ignore reference errors
+  }
+
+  return undefined;
+};
+
 export const initializeGenAI = (): GoogleGenAI => {
   if (!genAI) {
-    const apiKey = process.env.API_KEY;
+    const apiKey = getApiKey();
+    
     if (!apiKey) {
-      console.error("API_KEY is missing from environment variables.");
+      console.error("API_KEY is missing. If running locally, make sure you have a .env file with VITE_API_KEY=your_key");
       throw new Error("API_KEY is missing");
     }
     genAI = new GoogleGenAI({ apiKey });
